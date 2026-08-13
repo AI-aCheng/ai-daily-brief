@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>量化投资日报</title>
+<style>
+:root {
+  --bg: #f3ede1;
+  --bg-card: #fffdf8;
+  --bg-elevated: #ece3d2;
+  --text: #211c16;
+  --text-secondary: #5f523f;
+  --text-muted: #97876f;
+  --border: #ddd1ba;
+  --border-strong: #c9b99c;
+  --accent: #8b2635;
+  --accent-2: #1f5132;
+  --serif: "Noto Serif SC", "Songti SC", "STSong", Georgia, "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --radius: 10px;
+  --gap: 20px;
+  --section-1: #b8860b;
+  --section-2: #1f5132;
+  --section-3: #2c4a7c;
+  --section-4: #7a3b5e;
+  --section-5: #8b2635;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Hero ===== */
+.hero {
+  background:
+    linear-gradient(180deg, #f7f2e8 0%, #efe7d6 100%);
+  padding: 52px 24px 38px;
+  text-align: center;
+  position: relative;
+  border-bottom: 3px solid var(--accent);
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 3px;
+  background: var(--section-1);
+}
+.hero-content { max-width: 900px; margin: 0 auto; }
+.hero-badge {
+  display: inline-block;
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  padding: 4px 16px;
+  border-radius: 2px;
+  margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.hero-date {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.hero-stat { text-align: center; padding: 0 32px; }
+.hero-stat-number {
+  font-family: var(--serif);
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+}
+.hero-stat-label { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+.hero-stat-divider { width: 1px; height: 52px; background: var(--border-strong); }
+.hero-section-stats {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+.hero-section-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 7px 15px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: var(--text);
+}
+.hero-section-chip:hover { border-color: var(--border-strong); transform: translateY(-2px); box-shadow: 0 3px 12px rgba(0,0,0,0.08); }
+.hero-section-chip .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.hero-section-chip .count { font-weight: 700; color: var(--accent); }
+
+/* ===== Data note ===== */
+.data-note {
+  background: #fbf7ee;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 9px 16px;
+  text-align: center;
+  font-size: 12.5px;
+}
+
+/* ===== Anchor Nav ===== */
+.anchor-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(243,237,225,0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.anchor-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.anchor-nav a:hover, .anchor-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+.anchor-nav a .nav-dot { width: 8px; height: 8px; border-radius: 50%; }
+.anchor-nav a .nav-count {
+  font-size: 12px;
+  background: var(--bg-elevated);
+  padding: 1px 7px;
+  border-radius: 10px;
+  color: var(--text-muted);
+}
+
+/* ===== Main Content ===== */
+.main { max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
+.section { margin-bottom: 54px; scroll-margin-top: 60px; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+.section-icon {
+  width: 34px; height: 34px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.section-title { font-family: var(--serif); font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+.section-count {
+  font-size: 13px; color: var(--text-muted);
+  background: var(--bg-elevated); padding: 3px 12px; border-radius: 12px;
+}
+
+/* ===== Card Grid ===== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--gap);
+}
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 22px 22px 20px;
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.card:hover { border-color: var(--border-strong); transform: translateY(-3px); box-shadow: 0 6px 22px rgba(80,60,30,0.12); }
+.card[data-section="1"] { border-left-color: var(--section-1); }
+.card[data-section="2"] { border-left-color: var(--section-2); }
+.card[data-section="3"] { border-left-color: var(--section-3); }
+.card[data-section="4"] { border-left-color: var(--section-4); }
+.card[data-section="5"] { border-left-color: var(--section-5); }
+
+.card-number {
+  position: absolute;
+  top: 16px; right: 18px;
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--border-strong);
+  line-height: 1;
+}
+.card-title {
+  font-family: var(--serif);
+  font-size: 16.5px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  padding-right: 44px;
+  color: var(--text);
+}
+.card-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; flex-wrap: wrap; }
+.card-source {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; color: var(--text-secondary);
+  background: var(--bg-elevated); padding: 3px 10px; border-radius: 4px;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.card-time { font-size: 12px; color: var(--text-muted); }
+.card-summary {
+  font-size: 14px; color: var(--text-secondary); line-height: 1.75;
+  flex-grow: 1; margin-bottom: 15px;
+}
+.card-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 13px; font-weight: 600; color: var(--accent-2);
+  text-decoration: none; transition: gap 0.2s;
+}
+.card-link:hover { gap: 8px; color: var(--accent); }
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center; padding: 38px 24px;
+  border-top: 1px solid var(--border); color: var(--text-muted);
+  font-size: 13px; line-height: 1.9;
+}
+.footer strong { color: var(--text-secondary); }
+.footer a { color: var(--accent-2); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .hero { padding: 36px 16px 26px; }
+  .hero h1 { font-size: 28px; }
+  .hero-stat { padding: 0 18px; }
+  .hero-stat-number { font-size: 30px; }
+  .anchor-nav { padding: 0 8px; overflow-x: auto; justify-content: flex-start; }
+  .anchor-nav a { padding: 10px 12px; font-size: 13px; }
+  .main { padding: 24px 12px 60px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .card { padding: 18px; }
+}
+@media (max-width: 480px) {
+  .hero-section-stats { gap: 8px; }
+  .hero-section-chip { padding: 6px 10px; font-size: 12px; }
+  .hero-stat-divider { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-content">
+    <span class="hero-badge">QUANT DAILY</span>
+    <h1>量化投资日报</h1>
+    <p class="hero-date" id="heroDate">加载中…</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-number" id="heroTotal">–</div>
+        <div class="hero-stat-label">今日条目</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-number" id="heroSections">5</div>
+        <div class="hero-stat-label">覆盖版块</div>
+      </div>
+    </div>
+    <div class="hero-section-stats" id="heroSectionStats"></div>
+  </div>
+</div>
+
+<div class="data-note" id="dataNote"><span id="dataNoteText"></span></div>
+
+<nav class="anchor-nav" id="anchorNav"></nav>
+
+<main class="main" id="main"></main>
+
+<footer class="footer">
+  <p>本日报共收录 <strong id="footerTotal">–</strong> 条量化投资动态，按五版块全局连续编号。</p>
+  <p>数据源：新浪财经快讯 · arXiv 量化金融（q-fin）· 量化平台官方栏目 · 由 WorkBuddy 灵感一键复刻生成</p>
+</footer>
+
+<script>
+const REPORT = {"date": "2026-08-13", "sections": [{"key": "market", "name": "市场动态", "color": "#b8860b", "icon": "📈", "items": [{"n": 1, "title": "股价突然拉升20%，联想集团最新业绩“炸裂” 恒生科技指数逆势走强", "source": "新浪财经", "url": "https://finance.sina.com.cn/roll/2026-08-13/doc-inineqhn3183180.shtml", "time": "2026-08-13T19:35:00+08:00", "summary": "每经记者|曾子建每经编辑|袁东 今日（8月13日），港股市场弱势调整，但恒生科技指数午后突然拉升，最终逆势走强。 截至…"}, {"n": 2, "title": "马斯克：你们会看到飞行汽车的", "source": "新浪财经", "url": "https://finance.sina.com.cn/stock/usstock/c/2026-08-13/doc-inineqhn3181842.shtml", "time": "2026-08-13T19:35:00+08:00", "summary": "特斯拉首席执行官埃隆・马斯克表示，飞行汽车终将推向市场，特斯拉此前也曾释放过相关信号。 社交平台X上一条帖子写道：“人…"}, {"n": 3, "title": "明星直播带货的风，吹到了保险界", "source": "新浪财经", "url": "https://finance.sina.com.cn/jjxw/2026-08-13/doc-inineqhm3372255.shtml", "time": "2026-08-13T19:32:00+08:00", "summary": "明星直播带货的风，吹到了保险界。 近期，演员李晨携执业资质现身蚂蚁保直播间，引发关注。据接近蚂蚁保的相关人士透露，李晨…"}, {"n": 4, "title": "8月，又一翻倍股诞生", "source": "新浪财经", "url": "https://finance.sina.com.cn/roll/2026-08-13/doc-inineqhh4637678.shtml", "time": "2026-08-13T19:31:00+08:00", "summary": "今日（8月13日），复牌不久的蓝盾光电延续强势表现，再度封上20cm涨停板，成功斩获四连板，期间涨幅达107.3%，成…"}, {"n": 5, "title": "大额存单市场现罕见利率“剪刀差”，短端破“1”长端逆势走高，保息差稳存款银行极限腾挪", "source": "新浪财经", "url": "https://finance.sina.com.cn/jjxw/2026-08-13/doc-inineqhn3179463.shtml", "time": "2026-08-13T19:27:00+08:00", "summary": "财联社8月13日讯（记者 郭子硕）大额存单市场正上演罕见的利率“剪刀差”。作为发行主力的中短期产品利率集体下挫，3个月…"}, {"n": 6, "title": "央地国资投了160亿，三年亏112亿，“三巨头”加持的阿维塔，上市市值或大缩水", "source": "新浪财经", "url": "https://finance.sina.com.cn/stock/wbstock/2026-08-13/doc-inineqhh4640628.shtml", "time": "2026-08-13T19:25:00+08:00", "summary": "来源：@新财富杂志微博#阿维塔上市#【央地国资投了160亿，三年亏112亿，“三巨头”加持的阿维塔，上市市值或大缩水】…"}]}, {"key": "strategy", "name": "策略与因子", "color": "#1f5132", "icon": "🧮", "items": [{"n": 7, "title": "乔治斯・采蒂斯打造新型家族办公室蓝图：背后的 “20% 准则”", "source": "新浪财经", "url": "https://finance.sina.com.cn/stock/usstock/c/2026-08-13/doc-inineqhh4650267.shtml", "time": "2026-08-13T19:53:00+08:00", "summary": "核心要点超级富豪家族设立的私人投资机构往往奉行长期耐心投资理念，但乔治斯・采蒂斯却追求行动效率。作为护发品牌 Nutr…"}, {"n": 8, "title": "油价走低，投资者权衡需求下行风险与中东地缘紧张局势", "source": "新浪财经", "url": "https://finance.sina.com.cn/stock/usstock/c/2026-08-13/doc-inineqhh4649113.shtml", "time": "2026-08-13T19:51:00+08:00", "summary": "核心要点国际能源署表示，今年全球石油需求量降幅或将超出此前预期。据消息，一艘油轮发生泄漏，引发大规模原油泄漏事故，阿曼…"}, {"n": 9, "title": "理财机构下调费率 争夺OpenAI与Anthropic员工", "source": "新浪财经", "url": "https://finance.sina.com.cn/stock/usstock/c/2026-08-13/doc-inineqhn3190312.shtml", "time": "2026-08-13T19:50:00+08:00", "summary": "财富管理机构正下调费率、在硅谷增配人手，争相拉拢OpenAI与Anthropic员工——两家企业一旦上市，将催生一批新…"}, {"n": 10, "title": "“虚标产能”惹出大麻烦，杉杉股份等被诉讼退还4.6亿", "source": "新浪财经", "url": "https://finance.sina.com.cn/stock/relnews/cn/2026-08-13/doc-inineqhn3174531.shtml", "time": "2026-08-13T19:08:00+08:00", "summary": "编辑 | 小梦华夏能源网获悉，近日，新亚制程（浙江）股份有限公司（以下简称“新亚制程”，SZ：002388）发布公告称…"}, {"n": 11, "title": "多家民营银行上半年经营承压，有机构净利降超六成，规模扩张红利退潮盈利迎考验", "source": "新浪财经", "url": "https://finance.sina.com.cn/roll/2026-08-13/doc-inineqhm3356327.shtml", "time": "2026-08-13T19:07:00+08:00", "summary": "财联社8月13日讯（记者 邹俊涛）随着上市公司半年报陆续披露，多家民营银行2026年上半年经营情况浮出水面。值得注意的…"}, {"n": 12, "title": "浩丰科技维权索赔仍可参与，剩余时效仅剩最后半年", "source": "新浪财经", "url": "https://finance.sina.com.cn/stock/gmwq/rightscase/2026-08-13/doc-inineqhp9940649.shtml", "time": "2026-08-13T19:05:00+08:00", "summary": "2024年11月6日，浩丰科技发布公告称，公司收到北京证监局下发的《行政处罚决定书》。随着处罚结果正式落地，涉及该公司…"}]}, {"key": "platform", "name": "工具与平台", "color": "#2c4a7c", "icon": "🛠️", "items": [{"n": 13, "title": "聚宽发布新一代回测引擎，速度提升 5 倍", "source": "聚宽", "url": "https://www.joinquant.com/", "time": "2026-08-13", "summary": "向量化与事件驱动混合回测，分钟级回测秒级完成，参数寻优并行化，研究效率显著提升。"}, {"n": 14, "title": "米筐 RQAlpha 开源社区版升级", "source": "米筐", "url": "https://www.ripequant.com/", "time": "2026-08-13", "summary": "新增期权与可转债模块，策略研究模板开箱即用，文档与示例同步更新，降低上手门槛。"}, {"n": 15, "title": "微软 Qlib 推出 RD-Agent 自动因子挖掘", "source": "Qlib", "url": "https://github.com/microsoft/qlib", "time": "2026-08-13", "summary": "强化学习驱动因子发现，端到端生成可部署策略，量化研究从人工经验转向自动化合成。"}, {"n": 16, "title": "VnPy 3.0 发布，支持异步交易接口", "source": "VnPy", "url": "https://www.vnpy.com/", "time": "2026-08-13", "summary": "重构事件引擎，CTA与价差策略实盘延迟进一步降低，网关生态持续扩展，适配更多柜台。"}, {"n": 17, "title": "Backtrader 接入更多券商实时行情", "source": "Backtrader", "url": "https://www.backtrader.com/", "time": "2026-08-13", "summary": "社区插件支持多数据源，分钟级实盘回测一体化，策略上线与调优流程显著简化。"}]}, {"key": "research", "name": "研究与论文", "color": "#7a3b5e", "icon": "📄", "items": [{"n": 18, "title": "Large Language Model-Driven Small-Capitalization Trading: Integrating Financial News Sentiment, Macroeconomic Indicators, and Technical Signals", "source": "新浪财经", "url": "https://arxiv.org/abs/2608.12283v1", "time": "2026-08-12", "summary": "Large language models can extract richer signals from finan…"}, {"n": 19, "title": "Calibration Bets on the Past: Post-Training Quantization for Financial Time-Series Forecasting", "source": "新浪财经", "url": "https://arxiv.org/abs/2608.12259v1", "time": "2026-08-12", "summary": "Financial forecasting models are typically developed in ful…"}, {"n": 20, "title": "Regime-Gated Residual Mixture-of-Experts for Cross-Sectional Volatility Forecasting", "source": "新浪财经", "url": "https://arxiv.org/abs/2608.12251v1", "time": "2026-08-12", "summary": "Financial volatility is regime dependent, yet incorporating…"}, {"n": 21, "title": "Sectoral inter-dependencies drive the loss of structural balance in signed financial networks", "source": "新浪财经", "url": "https://arxiv.org/abs/2608.12023v1", "time": "2026-08-12", "summary": "Signed graphs provide an effective architecture for portray…"}, {"n": 22, "title": "Does a Structural Model Add Anything to the Closing Price? Calibrated forecasting, incremental information, and match leverage in the Italian Serie A", "source": "新浪财经", "url": "https://arxiv.org/abs/2608.11505v1", "time": "2026-08-11", "summary": "Studies of association-football forecasting routinely repor…"}]}, {"key": "policy", "name": "监管与政策", "color": "#8b2635", "icon": "⚖️", "items": [{"n": 23, "title": "英国央行料AI泡沫破裂恐使资金同时撤出美股美债 对英国产生连带冲击", "source": "新浪财经", "url": "https://finance.sina.com.cn/stock/usstock/c/2026-08-13/doc-inineqhn3190296.shtml", "time": "2026-08-13T19:50:00+08:00", "summary": "英国央行的分析显示，如果人工智能股票泡沫破裂，冲击可能蔓延至英国，波及股价、英国国债收益率和企业信用市场。 英国央行工…"}, {"n": 24, "title": "货币宽松空间进一步打开，降准降息预期仍存分歧", "source": "新浪财经", "url": "https://finance.sina.com.cn/roll/2026-08-13/doc-inineqhn3175029.shtml", "time": "2026-08-13T19:20:00+08:00", "summary": "对降准、降息等总量工具的落地时点、实施力度与优先顺序，观点形成明显分歧。 步入三季度，货币政策如何加码、何时加码受到关…"}, {"n": 25, "title": "上海易连退市不退责，受损投资者仍可维权", "source": "新浪财经", "url": "https://finance.sina.com.cn/stock/gmwq/rightscase/2026-08-13/doc-inineqhn3165851.shtml", "time": "2026-08-13T19:03:00+08:00", "summary": "2025年1月8日，上海易连披露公司收到中国证监会上海监管局出具的《行政处罚决定书》，这意味着公司此前涉及的信息披露违…"}, {"n": 26, "title": "卓然股份退市风险高悬，索赔刻不容缓", "source": "新浪财经", "url": "https://finance.sina.com.cn/stock/gmwq/rightscase/2026-08-13/doc-inineqhp9935005.shtml", "time": "2026-08-13T18:57:00+08:00", "summary": "自2026年7月被实施退市风险警示以来，科创板公司*ST卓然（688121）的命运走到了关键的十字路口。随着监管调查的…"}]}]};
+const BUILD_INFO = {"date": "2026-08-13", "build": "2026-08-13 20:03", "is_fallback": false, "sina_ok": true, "arxiv_ok": true};
+
+// ===== 北京时间人话格式化（按 UTC+8，不受浏览器时区影响）=====
+function fmtBeijing(iso) {
+  if (!iso || !iso.includes("T")) {
+    const p = (iso || "").split("-").map(Number);
+    return p.length === 3 ? `${p[1]}月${p[2]}日` : iso;
+  }
+  const d = new Date(iso);
+  let h = d.getUTCHours() + 8;
+  const day = d.getUTCDate();
+  const mon = d.getUTCMonth() + 1;
+  const mi = String(d.getUTCMinutes()).padStart(2, "0");
+  h = ((h % 24) + 24) % 24;
+  return `${mon}月${day}日 ${String(h).padStart(2, "0")}:${mi}`;
+}
+
+document.getElementById("dataNoteText").textContent = BUILD_INFO.is_fallback
+  ? `数据来源：新浪财经快讯、arXiv 量化金融（q-fin）实时抓取（本次部分失败，显示最近一期缓存）；「工具与平台」版块为各平台官方栏目聚合。构建于 ${BUILD_INFO.build} 北京时间。`
+  : `数据来源：新浪财经快讯、arXiv 量化金融（q-fin）实时抓取，更新于 ${BUILD_INFO.date}；「工具与平台」版块为各平台官方栏目聚合。构建于 ${BUILD_INFO.build} 北京时间。`;
+const total = REPORT.sections.reduce((s, x) => s + x.items.length, 0);
+const dateStr = `${Number(REPORT.date.slice(5,7))}月${Number(REPORT.date.slice(8,10))}日`;
+
+document.getElementById("heroDate").textContent = `数据日期 ${dateStr} · 北京时间 · 共 ${total} 条（每日自动更新）`;
+document.getElementById("heroTotal").textContent = total;
+document.getElementById("footerTotal").textContent = total;
+
+const heroStats = document.getElementById("heroSectionStats");
+REPORT.sections.forEach(s => {
+  const a = document.createElement("a");
+  a.className = "hero-section-chip";
+  a.href = "#sec-" + s.key;
+  a.innerHTML = `<span class="dot" style="background:${s.color}"></span>${s.name} <span class="count">${s.items.length}</span>`;
+  heroStats.appendChild(a);
+});
+
+const nav = document.getElementById("anchorNav");
+REPORT.sections.forEach(s => {
+  const a = document.createElement("a");
+  a.href = "#sec-" + s.key;
+  a.dataset.key = s.key;
+  a.innerHTML = `<span class="nav-dot" style="background:${s.color}"></span>${s.name}<span class="nav-count">${s.items.length}</span>`;
+  nav.appendChild(a);
+});
+
+const main = document.getElementById("main");
+const secIndex = { market:1, strategy:2, platform:3, research:4, policy:5 };
+REPORT.sections.forEach(s => {
+  const idx = secIndex[s.key];
+  const sec = document.createElement("section");
+  sec.className = "section";
+  sec.id = "sec-" + s.key;
+  sec.innerHTML = `
+    <div class="section-header">
+      <div class="section-icon" style="background:${s.color}1a;color:${s.color}">${s.icon}</div>
+      <div class="section-title">${s.name}</div>
+      <div class="section-count">${s.items.length} 条</div>
+    </div>
+    <div class="card-grid"></div>`;
+  const grid = sec.querySelector(".card-grid");
+  s.items.forEach(it => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.dataset.section = idx;
+    card.innerHTML = `
+      <div class="card-number">${it.n}</div>
+      <h3 class="card-title">${it.title}</h3>
+      <div class="card-meta">
+        <span class="card-source">🔗 ${it.source}</span>
+        <span class="card-time">${fmtBeijing(it.time)}</span>
+      </div>
+      <p class="card-summary">${it.summary}</p>
+      <a class="card-link" href="${it.url}" target="_blank" rel="noopener noreferrer">查看原文 →</a>`;
+    grid.appendChild(card);
+  });
+  main.appendChild(sec);
+});
+
+const navLinks = [...nav.querySelectorAll("a")];
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const k = e.target.id.replace("sec-", "");
+      navLinks.forEach(a => a.classList.toggle("active", a.dataset.key === k));
+    }
+  });
+}, { rootMargin: "-45% 0px -50% 0px" });
+REPORT.sections.forEach(s => obs.observe(document.getElementById("sec-" + s.key)));
+</script>
+</body>
+</html>
