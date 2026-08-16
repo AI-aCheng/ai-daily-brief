@@ -101,6 +101,7 @@ const chipsBox=document.getElementById('chips');
 const fb=document.getElementById('fallbackNote');
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function secIdx(it){return DATA.items.slice(0,DATA.items.indexOf(it)).filter(x=>x.section===it.section).length+1;}
 function colorOf(sec){return SECTION_COLORS[sec]||'#8a6d4f';}
 function secStart(label){const s=(DATA.sections||[]).find(x=>x.label===label);return s?s.start-1:0;}
 
@@ -121,7 +122,7 @@ function render(){
   cardWrap.innerHTML=`<article class="card" style="--c:${color}">
     <div class="card-top">
       <span class="sec-tag" style="color:${color}">${esc(it.section)}</span>
-      <span class="num">${String(it.n).padStart(2,'0')}</span>
+      <span class="num">${String(secIdx(it)).padStart(2,'0')}</span>
     </div>
     <h2 class="title">${esc(it.title)}</h2>
     <div class="src">${esc(it.source)||'—'}</div>
