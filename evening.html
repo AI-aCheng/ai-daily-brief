@@ -148,7 +148,7 @@ cardWrap.addEventListener('touchend',e=>{
 },{passive:true});
 
 if(IS_FALLBACK){fb.style.display='block';
-  fb.textContent='⚠️ 实时数据源暂不可用，当前显示最近一期缓存（'+(DATA.date||'')+'）。';}
+  fb.textContent='⚠️ AIHOT 数据源临时不可用，当前显示中文聚合源（IT之家/cnBeta/新浪科技），日期 '+(DATA.date||'')+'。';}
 render();
 
 function formatDateHuman(ds){
